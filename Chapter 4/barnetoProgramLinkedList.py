@@ -25,11 +25,70 @@ def insert(index, newItem, head):
     referred to by head.  Returns a reference to the new
     structure."""
 
+    if head == None:
+        return Node(newItem)
+
+    if length(head) <= index:
+        # navigate to end of tree and append newItem
+        probe = head
+        while probe.next is not None:
+            probe = probe.next
+        probe.next = Node(newItem)
+    else:
+        if index == 0:
+            next = head
+            head = Node(newItem)
+            head.next = next
+        else:
+            probe = head
+            i = 0
+            while probe.next is not None:
+                if i == index - 1:
+                    # save probe.next
+                    next = probe.next
+                    # set probe.next to new node
+                    newNode = Node(newItem)
+                    # set new node.next equal to saved probe.next
+                    newNode.next = next
+                    probe.next = newNode
+                probe = probe.next
+                i += 1
+
+    return head
+
 
 def remove(index, head):
     """Removes the item at index from the linked structure
     referred to by head and returns the tuple (head, item)
     Precondition: 0 <= index < length(head)"""
+    if index < 0 or index > length(head):
+        raise IndexError
+    value = None
+    if index == 0:
+        # set head = head.next
+        value = head.data
+        head = head.next
+    elif index == length(head) - 1:
+        # navigate to end and set next to none
+        probe = head
+        prevProbe = None
+        while probe.next is not None:
+            prevProbe = probe
+            probe = probe.next
+        prevProbe.next = None
+    else:
+        # navigate to index - 1
+        probe = head
+        i = 0
+        while probe is not None:
+            if i == index - 1:
+                probe.next = probe.next.next
+                pass
+            prevProbe = probe
+            probe = probe.next
+            i += 1
+
+    return head, value
 
 
 def printStructure(head):
