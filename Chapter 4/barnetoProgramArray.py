@@ -78,11 +78,26 @@ class Array(object):
     def insert(self, index, newItem):
         """Inserts item at index in the array."""
         # grow if array is full
+        if self.logicalSize == len(self.items):
+            self.grow()
+        if index > self.logicalSize:
+            for i in range(self.logicalSize, 0, -1):
+                index = i
+                if self.items[i] != self.fillValue:
+                    break
+
+        self.items.insert(index, newItem)
+        self.items.pop()
+        self.logicalSize += 1
 
     def remove(self, index):
         """Removes and returns item at index in the array.
         Precondition: 0 <= index < size()"""
+        if index < 0 or index >= self.size():
+            raise IndexError
 
+        self.items.append(self.fillValue)
+        return self.items.pop(index)
 
 def main():
     """Test code for modified Array class."""
@@ -98,9 +113,10 @@ def main():
     a.insert(2, 88)
     print("Insert 88 at index 2:", a)
     a.insert(15, 10)
-    print("Insert 10 at index 15:", a)
+    print("Insert 10 at index 5:", a)
     a.remove(3)
     print("Remove item at index 3:", a)
+
     for count in range(5):
         a.remove(0)
         print("Remove item at index 0:", a)
